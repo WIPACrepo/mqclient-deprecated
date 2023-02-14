@@ -56,7 +56,7 @@ jobs:
   #         base-keywords: WIPAC IceCube
 
   py-versions:
-    needs: [py-setup]
+    # needs: [py-setup]
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.versions.outputs.matrix }}
@@ -65,7 +65,7 @@ jobs:
       - id: versions
         uses: WIPACrepo/wipac-dev-py-versions-action@v2
 
-  pip-install:
+  pip-install-import:
     needs: [py-versions]
     runs-on: ${{ matrix.os }}
     strategy:
@@ -87,11 +87,12 @@ jobs:
           else
             pip install .[${{ matrix.type }}]
           fi
+          python -c 'import mqclient'
 
   release:
     # only run on main/master/default
     if: format('refs/heads/{0}', github.event.repository.default_branch) == github.ref
-    needs: [py-setup, pip-install]
+    needs: [py-setup, pip-install-import]
     runs-on: ubuntu-latest
     concurrency: release
     steps:
