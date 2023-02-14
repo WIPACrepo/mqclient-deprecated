@@ -1,0 +1,68 @@
+name: wipac ci/cd
+
+on: [push]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - uses: WIPACrepo/wipac-dev-flake8-action@v1
+
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      # - uses: WIPACrepo/wipac-dev-mypy-action@v1.1
+      - run: |
+          # there's a dependency clash with protobuf
+          # google wants protobuf>=4.21.3
+          # telemetry wants protobuf<4
+          # so let's set a timer for six months from now:
+          echo "How's https://github.com/WIPACrepo/MQClient/issues/51 coming along?"
+          if [ $(echo "1664320371+(60*60*24*30*6) - $(date +%s)" | bc) -lt 0 ]; then
+            exit 1
+          fi
+
+  pip-install-import:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        type: [brokerless, gcp, nats, pulsar, rabbitmq, all, telemetry]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - name: tests
+        run: |
+          pip install --upgrade pip wheel setuptools
+          if [ "${{ matrix.type }}" = "brokerless" ]; then
+            pip install .
+          else
+            pip install .[${{ matrix.type }}]
+          fi
+          python -c 'import mqclient'
+
+  release:
+    # only run on main/master/default
+    if: format('refs/heads/{0}', github.event.repository.default_branch) == github.ref
+    needs: [pip-install-import]
+    runs-on: ubuntu-latest
+    concurrency: release
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Python Semantic Release
+      uses: relekang/python-semantic-release@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        repository_username: __token__
+        repository_password: ${{ secrets.PYPI_TOKEN }}
