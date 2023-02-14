@@ -1,2 +1,5 @@
+<!--- Top of README Badges (automated) --->
+[![PyPI](https://img.shields.io/pypi/v/wipac-mqclient)](https://pypi.org/project/wipac-mqclient/) [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/WIPACrepo/mqclient-deprecated?include_prereleases)](https://github.com/WIPACrepo/mqclient-deprecated/) [![PyPI - License](https://img.shields.io/pypi/l/wipac-mqclient)](https://github.com/WIPACrepo/mqclient-deprecated/blob/main/LICENSE) [![Lines of code](https://img.shields.io/tokei/lines/github/WIPACrepo/mqclient-deprecated)](https://github.com/WIPACrepo/mqclient-deprecated/) [![GitHub issues](https://img.shields.io/github/issues/WIPACrepo/mqclient-deprecated)](https://github.com/WIPACrepo/mqclient-deprecated/issues?q=is%3Aissue+sort%3Aupdated-desc+is%3Aopen) [![GitHub pull requests](https://img.shields.io/github/issues-pr/WIPACrepo/mqclient-deprecated)](https://github.com/WIPACrepo/mqclient-deprecated/pulls?q=is%3Apr+sort%3Aupdated-desc+is%3Aopen) 
+<!--- End of README Badges (automated) --->
 # mqclient-deprecated
 Serves as a redirect for PyPI to the newer https://github.com/Observation-Management-Service/MQClient
