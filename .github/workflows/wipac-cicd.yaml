@@ -32,11 +32,10 @@ jobs:
           fi
 
   pip-install-import:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04]
         type: [brokerless, gcp, nats, pulsar, rabbitmq, all, telemetry]
     steps:
       - uses: actions/checkout@v3
